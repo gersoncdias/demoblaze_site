@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: demoblaze_site-app
+    ports:
+      - "8000:8000"  # Mapeia a porta 8000 do container para a 8000 do host
+    environment:
+     - DATABASE_URL=postgresql://demoblaze_user:Q@cdias3242*&@db:5433/demoblaze
+    depends_on:
+      - db
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000  # Comando para iniciar o FastAPI
+
+  db:
+    image: postgres:13
+    container_name: demoblaze_site-db-1
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: Q@cdias3242*&
+      POSTGRES_DB: demoblaze
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"  # Corrigido para a porta padrão do PostgreSQL
+
+volumes:
+  postgres_data:

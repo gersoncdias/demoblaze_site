@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details</title>
+  <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/latostyle.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <div id="product-content">
+    <!-- Conteúdo do produto será carregado aqui -->
+  </div>
+
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script>
+    // Função para obter o valor do parâmetro da URL
+    function getParameterByName(name) {
+      const url = window.location.href;
+      name = name.replace(/[\[\]]/g, '\\$&');
+      const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+      const results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    // Pega o ID do produto na URL
+    const productId = getParameterByName('idp_');
+
+    // Verifica se o produto existe e carrega o conteúdo
+    if (productId) {
+      $('#product-content').load(`produtos/prod_${productId}.html`);
+    } else {
+      $('#product-content').html('<p>Product not found.</p>');
+    }
+  </script>
+</body>
+</html>

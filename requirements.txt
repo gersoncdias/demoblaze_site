@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+asyncpg  # driver para PostgreSQL
+databases  # biblioteca para conexão com bancos de dados
