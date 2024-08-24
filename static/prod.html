@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Details</title>
-  <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet" type="text/css"> 
   <link href="css/latostyle.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -12,7 +13,7 @@
     <!-- Conteúdo do produto será carregado aqui -->
   </div>
 
-  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="js/tether.min.js"></script>
   <script>
     // Função para obter o valor do parâmetro da URL
     function getParameterByName(name) {
@@ -27,13 +28,17 @@
 
     // Pega o ID do produto na URL
     const productId = getParameterByName('idp_');
-
-    // Verifica se o produto existe e carrega o conteúdo
-    if (productId) {
-      $('#product-content').load(`produtos/prod_${productId}.html`);
-    } else {
+// Verifica se o produto existe e carrega o conteúdo
+if (productId) {
+  $('#product-content').load(`produtos/prod_${productId}.html`, function(response, status, xhr) {
+    if (status === "error") {
       $('#product-content').html('<p>Product not found.</p>');
     }
+  });
+} else {
+  $('#product-content').html('<p>Product not found.</p>');
+}
+
   </script>
 </body>
 </html>

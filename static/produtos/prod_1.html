@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details</title>
+  
+  <!-- Ajustando os caminhos para os arquivos CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/video-js.min.css" rel="stylesheet">
+  <link href="/css/latofonts.css" rel="stylesheet">
+  <link href="/css/latostyle.css" rel="stylesheet">
+
+  <style>
+    /* Estilos inline (mantidos) */
+    body { font-size: 11pt; }
+    /* ... outros estilos inline ... */
+  </style>
+</head>
+<body>
+  <!-- Modal SignIn -->
+  <div class="modal fade" id="signInModal" tabindex="-1" role="dialog" aria-labelledby="signInModalLabel" aria-hidden="true">
+    <!-- Conteúdo do modal... -->
+  </div>
+  
+  <!-- Navigation -->
+  <nav style="height:90px" class="navbar navbar-toggleable-md bg-inverse">
+    <!-- Conteúdo da barra de navegação... -->
+  </nav>
+
+  <!-- Product Content -->
+  <div class="product-content product-wrap clearfix product-deatil">
+    <div class="row">
+      <div class="col-md-5 col-sm-12 col-xs-12">
+        <div class="product-image">
+          <div id="myCarousel-2" class="carousel slide">
+            <!-- Imagem do produto... -->
+          </div>
+        </div>
+      </div>
+      <div class="col-md-7 col-sm-12 col-xs-12" id="tbodyid">
+        <!-- Detalhes do produto... -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Ajustando os caminhos para os arquivos JS -->
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/tether.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/video.min.js"></script>
+  <script src="/js/videojs-contrib-hls.min.js"></script>
+  <script src="/js/prod.js"></script>
+
+  <!-- Scripts Inline (mantidos) -->
+  <script>
+    // Função para carregar detalhes do produto com jQuery
+    function getParameterByName(name) {
+      const url = window.location.href;
+      name = name.replace(/[\[\]]/g, '\\$&');
+      const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+      const results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    const productId = getParameterByName('idp_');
+    
+    if (productId) {
+      $('#product-content').load(`/static/produtos/prod_${productId}.html`, function(response, status, xhr) {
+        if (status == "error") {
+          $('#product-content').html('<p>Product not found.</p>');
+        }
+      });
+    } else {
+      $('#product-content').html('<p>Product not found.</p>');
+    }
+  </script>
+  
+  <!-- Footer -->
+  <footer class="py-5 bg-inverse">
+    <p class="m-0 text-center text-white">Copyright © Product Store 2017</p>
+  </footer>
+</body>
+</html>

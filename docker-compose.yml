@@ -8,6 +8,8 @@ services:
       - "8000:8000" 
     environment:
       - DATABASE_URL=postgresql://demoblaze_user:Q@cdias3242*&@db:5432/demoblaze
+    volumes:
+      - .:/app  # Mapeia o diretório atual (com o código) para o diretório /app dentro do contêiner
     depends_on:
       - db
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
