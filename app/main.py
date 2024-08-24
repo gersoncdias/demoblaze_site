@@ -3,7 +3,7 @@ from databases import Database
 
 app = FastAPI()
 
-DATABASE_URL = "postgresql://demoblaze_user:sua_senha_forte@db:5432/demoblaze"
+DATABASE_URL = "postgresql://demoblaze_user:Q@cdias3242*&@db:5432/demoblaze"
 database = Database(DATABASE_URL)
 
 @app.on_event("startup")
