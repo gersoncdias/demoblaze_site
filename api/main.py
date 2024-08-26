@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+from fastapi.middleware.cors import CORSMiddleware  # Importando o CORSMiddleware
 from pydantic import BaseModel
 from databases import Database
 import base64
@@ -14,9 +15,19 @@ database = Database(DATABASE_URL)
 # Montando o diretório estático
 app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 
+# Configuração do CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permitindo todas as origens, ajuste conforme necessário
+    allow_credentials=True,
+    allow_methods=["*"],  # Permitindo todos os métodos
+    allow_headers=["*"],  # Permitindo todos os headers
+)
+
 class User(BaseModel):
     username: str
     password: str
+
 # Defina outras rotas e lógica aqui
 
 @app.get("/")
@@ -27,7 +38,7 @@ async def read_index():
 async def signup(request: Request):
     body = await request.json()
     username = body.get("username")
-    password = body.get("password")  # Não faça a decodificação de Base64
+    password = body.get("password")
 
     query = "SELECT * FROM users WHERE username = :username"
     existing_user = await database.fetch_one(query=query, values={"username": username})
@@ -35,11 +46,26 @@ async def signup(request: Request):
     if existing_user:
         raise HTTPException(status_code=400, detail="User already exists")
 
-    # Armazene a senha diretamente (considere aplicar hash antes de armazenar)
     query = "INSERT INTO users (username, password) VALUES (:username, :password)"
     values = {"username": username, "password": password}
     await database.execute(query=query, values=values)
     return {"status": "User created successfully"}
+
+@app.post("/login")
+async def login(user: User, response: Response):
+    encoded_password = base64.b64encode(user.password.encode("utf-8")).decode("utf-8")
+
+    query = "SELECT * FROM users WHERE username = :username AND password = :password"
+    values = {"username": user.username, "password": encoded_password}
+    existing_user = await database.fetch_one(query=query, values=values)
+
+    if not existing_user:
+        raise HTTPException(status_code=400, detail="Invalid username or password")
+
+    auth_token = base64.b64encode(f"{user.username} {user.password}".encode("utf-8")).decode("utf-8")
+    response.set_cookie(key="tokenp_", value=auth_token)
+
+    return {"Auth_token": auth_token}
 
 @app.get("/users")
 async def get_users():
