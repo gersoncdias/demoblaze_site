@@ -2,17 +2,17 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build: ./api
     container_name: demoblaze_site-app
     ports:
       - "8000:8000" 
     environment:
       - DATABASE_URL=postgresql://demoblaze_user:Q@cdias3242*&@db:5432/demoblaze
     volumes:
-      - .:/app  # Mapeia o diretório atual (com o código) para o diretório /app dentro do contêiner
+      - ./frontend/static:/app/frontend/static  # Mapeia o diretório de frontend para o contêiner
     depends_on:
       - db
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
 
   db:
     image: postgres:13

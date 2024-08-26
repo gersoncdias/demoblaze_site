@@ -1,0 +1,4 @@
+{
+    "API_URL": "http://localhost:8000",
+    "HLS_URL": "http://localhost:8000/hls"
+}
