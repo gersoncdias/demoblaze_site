@@ -107,47 +107,41 @@ function send() {
 }
 
 function logIn() {
-  var pass = b64EncodeUnicode(document.getElementById("loginpassword").value);
+  var pass = document.getElementById("loginpassword").value;
   var username = document.getElementById("loginusername").value;
-  if (pass == "" || username == "") {
+
+  if (pass === "" || username === "") {
     alert("Please fill out Username and Password.");
   } else {
     $.ajax({
       type: 'POST',
-      url: API_URL + '/login',
+      url: 'http://127.0.0.1:8000/login',
       data: JSON.stringify({ "username": username, "password": pass }),
       contentType: "application/json",
-
       success: function (data) {
-        if (data.errorMessage == "Wrong password.") {
-          alert("Wrong password.");
-        } else if (data.errorMessage == "User does not exist.") {
-          alert("User does not exist.");
-        } else {
-          $('#logInModal').modal('hide');
-          $('.modal-backdrop').hide();
-          token = data.replace("Auth_token: ", "");
-          document.cookie = "tokenp_=" + token;
-          location.reload();
-        }
+        console.log("Login successful");
+        token = data.replace("Auth_token: ", "");
+        document.cookie = "tokenp_=" + token;
+        location.reload();
+      },
+      error: function (xhr, status, error) {
+        console.error("Login failed: ", error);
+        alert("Login failed: " + xhr.responseText);
       }
     });
   }
 }
+
+
 
 function logOut() {
   document.cookie = 'tokenp_' + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
   location.href = 'index.html';
 }
 
-function b64EncodeUnicode(str) {
-  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
-    return String.fromCharCode('0x' + p1);
-  }));
-}
 
 function register() {
-  var pass = b64EncodeUnicode(document.getElementById("sign-password").value);
+  var pass = document.getElementById("sign-password").value;  // Senha sem codificação
   var username = document.getElementById("sign-username").value;
   if (pass == "" || username == "") {
     alert("Please fill out Username and Password.");
@@ -155,7 +149,7 @@ function register() {
     $.ajax({
       type: 'POST',
       url: API_URL + '/signup',
-      data: JSON.stringify({ "username": username, "password": pass }),
+      data: JSON.stringify({ "username": username, "password": pass }),  // Senha enviada diretamente
       contentType: "application/json",
 
       success: function (data) {
@@ -170,6 +164,7 @@ function register() {
     });
   }
 }
+
 
 function addToCart(idp) {
   var token = getCookie("tokenp_");

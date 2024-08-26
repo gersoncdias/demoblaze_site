@@ -4,6 +4,7 @@ from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware  # Importando o CORSMiddleware
 from pydantic import BaseModel
 from databases import Database
+from typing import List
 import base64
 
 app = FastAPI()
@@ -38,7 +39,7 @@ async def read_index():
 async def signup(request: Request):
     body = await request.json()
     username = body.get("username")
-    password = body.get("password")
+    password = body.get("password")  # Senha recebida diretamente sem codificação
 
     query = "SELECT * FROM users WHERE username = :username"
     existing_user = await database.fetch_one(query=query, values={"username": username})
@@ -46,26 +47,30 @@ async def signup(request: Request):
     if existing_user:
         raise HTTPException(status_code=400, detail="User already exists")
 
+    # Armazene a senha diretamente
     query = "INSERT INTO users (username, password) VALUES (:username, :password)"
     values = {"username": username, "password": password}
     await database.execute(query=query, values=values)
     return {"status": "User created successfully"}
 
+
 @app.post("/login")
 async def login(user: User, response: Response):
-    encoded_password = base64.b64encode(user.password.encode("utf-8")).decode("utf-8")
-
     query = "SELECT * FROM users WHERE username = :username AND password = :password"
-    values = {"username": user.username, "password": encoded_password}
+    values = {"username": user.username, "password": user.password}  # Comparação direta
     existing_user = await database.fetch_one(query=query, values=values)
 
     if not existing_user:
         raise HTTPException(status_code=400, detail="Invalid username or password")
 
+    # Gerar o token de autenticação
     auth_token = base64.b64encode(f"{user.username} {user.password}".encode("utf-8")).decode("utf-8")
+
+    # Setar o token nos cookies
     response.set_cookie(key="tokenp_", value=auth_token)
 
     return {"Auth_token": auth_token}
+
 
 @app.get("/users")
 async def get_users():
@@ -73,12 +78,24 @@ async def get_users():
     users = await database.fetch_all(query=query)
     return [{"id": user["id"], "username": user["username"], "password": base64.b64encode(user["password"].encode()).decode()} for user in users]
 
-@app.delete("/delete_user/{user_id}")
+@app.delete("/users/{user_id}")
 async def delete_user(user_id: int):
     query = "DELETE FROM users WHERE id = :id"
     values = {"id": user_id}
     await database.execute(query=query, values=values)
     return {"status": f"User with id {user_id} deleted successfully"}
+
+# Modelo para receber a lista de IDs
+class DeleteUsersRequest(BaseModel):
+    ids: List[int]
+
+@app.delete("/delete_users")
+async def delete_users(request: DeleteUsersRequest):
+    query = "DELETE FROM users WHERE id = ANY(:ids)"
+    values = {"ids": request.ids}
+    result = await database.execute(query=query, values=values)
+    
+    return {"status": f"{len(request.ids)} users deleted successfully"}
 
 @app.on_event("startup")
 async def startup():
