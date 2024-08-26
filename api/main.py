@@ -14,6 +14,9 @@ database = Database(DATABASE_URL)
 # Montando o diretório estático
 app.mount("/static", StaticFiles(directory="frontend/static"), name="static")
 
+class User(BaseModel):
+    username: str
+    password: str
 # Defina outras rotas e lógica aqui
 
 @app.get("/")
@@ -24,18 +27,7 @@ async def read_index():
 async def signup(request: Request):
     body = await request.json()
     username = body.get("username")
-    encoded_password = body.get("password")
-
-    # Verificar se a string de senha está em Base64 corretamente
-    try:
-        # Verificar se o tamanho da string é múltiplo de 4 (requisito básico para Base64)
-        if len(encoded_password) % 4 != 0:
-            raise ValueError("Invalid Base64 string length")
-
-        # Tentar decodificar a string
-        password = base64.b64decode(encoded_password).decode("utf-8")
-    except Exception as e:
-        raise HTTPException(status_code=400, detail="Error decoding password: " + str(e))
+    password = body.get("password")  # Não faça a decodificação de Base64
 
     query = "SELECT * FROM users WHERE username = :username"
     existing_user = await database.fetch_one(query=query, values={"username": username})
@@ -43,6 +35,7 @@ async def signup(request: Request):
     if existing_user:
         raise HTTPException(status_code=400, detail="User already exists")
 
+    # Armazene a senha diretamente (considere aplicar hash antes de armazenar)
     query = "INSERT INTO users (username, password) VALUES (:username, :password)"
     values = {"username": username, "password": password}
     await database.execute(query=query, values=values)
