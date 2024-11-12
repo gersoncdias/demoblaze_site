@@ -1,0 +1,27 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Roda a pipeline ao fazer push na branch main
+  pull_request:
+    branches:
+      - main  # Roda a pipeline para pull requests na branch main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v2
+
+      - name: Configurar Docker
+        uses: actions/setup-docker@v1
+
+      - name: Build do container
+        run: docker-compose up -d --build
+
+      - name: Testes com Cypress
+        run: |
+          docker-compose exec -T <seu_container_de_testes> npx cypress run
