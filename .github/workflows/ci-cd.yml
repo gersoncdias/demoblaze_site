@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Roda a pipeline ao fazer push na branch main
+      - main
   pull_request:
     branches:
-      - main  # Roda a pipeline para pull requests na branch main
+      - main
 
 jobs:
   build:
@@ -16,8 +16,8 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v2
 
-      - name: Configurar Docker
-        uses: actions/setup-docker@v1
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
       - name: Build do container
         run: docker-compose up -d --build
