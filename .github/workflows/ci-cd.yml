@@ -24,21 +24,27 @@ jobs:
       - name: Build do container
         run: docker-compose up -d --build
 
+      - name: Configurar o Git para usar o GITHUB_TOKEN
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Gerar nova versão e criar tag
         id: tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git fetch --prune --unshallow
           TAG="v1.0.$(date +'%Y%m%d%H%M%S')"
           echo "Nova versão: $TAG"
           git tag $TAG
-          git push origin $TAG
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} $TAG
+          echo "::set-output name=TAG::$TAG"  # Define o nome da tag como uma saída para a próxima etapa
 
       - name: Criar Release no GitHub
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ steps.tag.outputs.TAG }}
+          tag_name: ${{ steps.tag.outputs.TAG }}  # Usa o tag_name criado na etapa anterior
           release_name: "Release ${{ steps.tag.outputs.TAG }}"
           draft: false
           prerelease: false
