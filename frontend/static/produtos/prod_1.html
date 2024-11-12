@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
-<!-- Mirrored from demoblaze.com/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 24 Aug 2024 00:12:46 GMT -->
 <head>
 
   <meta charset="utf-8">
@@ -10,17 +8,16 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <link rel="icon" href="favicon.ico">
+  <link rel="icon" href="/static/favicon.ico">
 
   <title>STORE</title>
   <!-- Bootstrap core CSS -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="node_modules/bootstrap-sweetalert/dist/sweetalert.css" rel="stylesheet">
-  <link href="node_modules/video.js/dist/video-js.min.css" rel="stylesheet">
-  <link href="css/latofonts.css" rel="stylesheet" type="text/css">
-  <link href="css/latostyle.css" rel="stylesheet" type="text/css">
-
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/static/css/video-js.min.css" rel="stylesheet">
+  <link href="/static/css/latofonts.css" rel="stylesheet" type="text/css">
+  <link href="/static/css/latostyle.css" rel="stylesheet" type="text/css">
+  <link href="/static/css/product.css" rel="stylesheet" type="text/css"> 
   <style>
     body {
       font-size: 11pt;
@@ -472,10 +469,6 @@
       color: white;
     }
 
-    #page-wrapper {
-      min-height: 300px;
-    }
-
     .navbar-nav {
       display: flex;
     }
@@ -541,8 +534,6 @@
       </div>
     </div>
   </div>
-
-
   <!-- end modal -->
 
   <!-- modal SignIn -->
@@ -579,59 +570,6 @@
     </div>
   </div>
   <!-- end modal -->
-
-  <!-- modal order -->
-  <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="orderModalLabel">Place order</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <label for="name" class="form-control-label" id="totalm">Total:</label>
-            <div class="form-group">
-              <label for="name" class="form-control-label">Name:</label>
-              <input type="text" class="form-control" id="name">
-            </div>
-            <div class="form-group">
-              <label for="country" class="form-control-label">Country:</label>
-              <input type="text" class="form-control" id="country">
-            </div>
-            <div class="form-group">
-              <label for="city" class="form-control-label">City:</label>
-              <input type="text" class="form-control" id="city">
-            </div>
-            <div class="form-group">
-              <label for="card" class="form-control-label">Credit card:</label>
-              <input type="text" class="form-control" id="card">
-            </div>
-            <div class="form-group">
-              <label for="month" class="form-control-label">Month:</label>
-              <input type="text" class="form-control" id="month">
-            </div>
-            <div class="form-group">
-              <label for="year" class="form-control-label">Year:</label>
-              <input type="text" class="form-control" id="year">
-            </div>
-            <div class="form-group">
-              <label id="errors" style="color:red" class="form-control-label"></label>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" onClick="purchaseOrder()" class="btn btn-primary">Purchase</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- end modal order -->
 
   <!-- modal logIn -->
   <div class="modal fade" id="logInModal" tabindex="-1" role="dialog" aria-labelledby="logInModalLabel"
@@ -682,7 +620,7 @@
         <div class="modal-body">
           <form>
             <div class="form-group">
-              <video poster="imgs/front.jpg" id=example-video width=400 height=320 class="video-js" controls>
+              <video poster="/static/imgs/front.jpg" id=example-video width=400 height=320 class="video-js" controls>
               </video>
             </div>
           </form>
@@ -701,12 +639,12 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="container">
-      <a class="navbar-brand" id="nava" href="index-2.html"><img width=50 height=50 style="margin-right:10px"
-          src="bm.png"> PRODUCT STORE</a>
+      <a class="navbar-brand" id="nava" href="/"><img width=50 height=50 style="margin-right:10px"
+          src="/static/bm.png"> PRODUCT STORE</a>
       <div class="navbar-collapse" id="navbarExample">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="index-2.html">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="modal" data-target="#exampleModal" href="#">Contact</a>
@@ -715,7 +653,7 @@
             <a class="nav-link" data-toggle="modal" data-target="#videoModal" href="#">About us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" onClick="showcart()">Cart</a>
+            <a class="nav-link" href="cart.html" id="cartur">Cart</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" id="login2" data-toggle="modal" data-target="#logInModal">Log in</a>
@@ -735,48 +673,39 @@
 
   </div>
 
-  <!-- cart -->
-  <div id="page-wrapper">
+  <!-- product -->
+  <div class="product-content product-wrap clearfix product-deatil">
     <div class="row">
-      <div class="col-lg-8">
-        <h2>Products</h2>
-        <div class="table-responsive">
-          <table class="table table-bordered table-hover table-striped">
-            <thead>
-              <tr>
-                <th width=120>Pic</th>
-                <th>Title</th>
-                <th>Price</th>
-                <th>x</th>
-              </tr>
-            </thead>
-            <tbody id="tbodyid">
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="col-lg-1">
-        <h2>Total</h2>
-        <div position="right" class="panel panel-info">
-          <div class="panel-heading">
-            <h3 class="panel-title" id="totalp"></h3>
+      <div class="col-md-5 col-sm-12 col-xs-12 ">
+        <div class="product-image">
+          <div id="myCarousel-2" class="carousel slide">
+            <ol class="carousel-indicators">
+              <li data-target="#myCarousel-2" data-slide-to="0" class=""></li>
+              <li data-target="#myCarousel-2" data-slide-to="1" class="active"></li>
+              <li data-target="#myCarousel-2" data-slide-to="2" class=""></li>
+            </ol>
+            <div class="carousel-inner" id="imgp">
+            <div class="item active"><img width="400" height="280" src="/static/imgs/galaxy_s6.jpg" alt=""></div></div>
+            <a class="left carousel-control" href="#myCarousel-2" data-slide="prev"></a>
+            <a class="right carousel-control" href="#myCarousel-2" data-slide="next"></a>
           </div>
         </div>
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#orderModal">Place Order</button>
       </div>
+      <div class="col-md-7 col-sm-12 col-xs-12" id="tbodyid">
+
+      <h2 class="name">Samsung galaxy s6</h2><hr><h3 class="price-container">$360<small> *includes tax</small></h3><hr><div class="description description-tabs"><ul id="myTab" class="nav nav-pills"><li class="active"></li></ul><div id="myTabContent" class="tab-content"><div class="tab-pane fade active in" id="more-information"><br><strong>Product description</strong><p>The Samsung Galaxy S6 is powered by 1.5GHz octa-core Samsung Exynos 7420
+ processor and it comes with 3GB of RAM. The phone packs 32GB of 
+internal storage cannot be expanded. </p></div></div></div><hr><div class="row"><div class="col-sm-12 col-md-6 col-lg-6"><a href="#" onclick="addToCart(1)" class="btn btn-success btn-lg">Add to cart</a></div></div></div>
     </div>
-    <!-- /.row -->
   </div>
-  <!-- end cart -->
 
-
-  <script src="node_modules/jquery/dist/jquery.min.js"></script>
-  <script src="node_modules/video.js/dist/video.min.js"></script>
-  <script src="node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.min.js"></script>
-  <script src="node_modules/tether/dist/js/tether.min.js"></script>
-  <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="node_modules/bootstrap-sweetalert/dist/sweetalert.min.js"></script>
-  <script type="text/javascript" src="js/cart.js"></script>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/video.min.js"></script> 
+  <script src="/static/js/videojs-contrib-hls.min.js"></script>
+  <script src="/static/js/tether.min.js"></script>
+  <script src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/index.js"></script>
+  <script src="/static/js/prod.js"></script>
 
   <div id="footc">
     <div id="fotcont" class="row">
@@ -802,7 +731,7 @@
       <div class="col-sm-4 col-lg-4 col-md-4">
         <div class="thumbnail">
           <div class="caption">
-            <h4><img width=50 height=50 style="margin-right:10px" src="bm.png"> PRODUCT STORE</h4>
+            <h4><img width=50 height=50 style="margin-right:10px" src="/static/bm.png"> PRODUCT STORE</h4>
           </div>
         </div>
       </div>
@@ -815,6 +744,4 @@
 
 </body>
 
-
-<!-- Mirrored from demoblaze.com/cart.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 24 Aug 2024 00:12:49 GMT -->
 </html>
