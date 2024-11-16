@@ -3,8 +3,8 @@ version: '3.8'
 services:
   app:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: ./frontend  # Caminho do diretório onde está o código
+      dockerfile: Dockerfile  # Nome do arquivo Dockerfile
     container_name: demoblaze_site-app-qa
     ports:
       - "8000:8000"
@@ -13,7 +13,6 @@ services:
     depends_on:
       - db
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
-
 
   db:
     image: postgres:13
@@ -29,4 +28,3 @@ services:
 
 volumes:
   postgres_data_qa:
- 
