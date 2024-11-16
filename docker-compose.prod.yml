@@ -1,16 +1,20 @@
+version: '3.8'
+
 services:
   app:
     build:
       context: ./api  # Atualizado para o diretório correto
-      dockerfile: Dockerfile  # Nome do Dockerfile no diretório
+      dockerfile: Dockerfile
     container_name: demoblaze_site-app-prod
     ports:
-      - "8100:8000"
+      - "8100:8000"  # Porta exclusiva para Produção
     environment:
       - DATABASE_URL=postgresql://demoblaze_user:Q@cdias3242*&@db:5432/demoblaze
     depends_on:
       - db
     command: uvicorn main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - ./frontend/static:/app/frontend/static-prod  # Volume exclusivo para Produção
 
   db:
     image: postgres:13
@@ -20,9 +24,13 @@ services:
       - POSTGRES_PASSWORD=Q@cdias3242*&
       - POSTGRES_DB=demoblaze
     ports:
-      - "5434:5432"
+      - "5434:5432"  # Porta exclusiva para Produção
     volumes:
-      - postgres_data_prod:/var/lib/postgresql/data
+      - postgres_data_prod:/var/lib/postgresql/data  # Volume exclusivo para Produção
 
 volumes:
-  postgres_data_prod:
+  postgres_data_prod:  # Volume isolado para o banco de dados Produção
+
+networks:
+  prod_network:  # Rede exclusiva para Produção
+    driver: bridge

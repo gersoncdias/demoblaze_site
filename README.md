@@ -175,7 +175,3 @@ Parar os Contêineres:
 bash
 
 docker-compose down
-
-
-
-testet de autenticação de qa
