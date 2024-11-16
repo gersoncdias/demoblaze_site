@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - qa
-  repository_dispatch:  # Gatilho para eventos do tipo `tests-passed` enviados pelo projeto de automação.
+  repository_dispatch:  # Captura eventos enviados pelo repositório de automação.
     types:
       - tests-passed
 
@@ -39,16 +39,15 @@ jobs:
           -d '{"event_type": "run-tests"}'
 
   merge-to-main:
-    needs: build-and-test  # Executa apenas se o job `build-and-test` foi concluído com sucesso.
+    # Remove a dependência de build-and-test, já que será acionado diretamente pelo evento repository_dispatch.
     runs-on: ubuntu-latest
-    if: github.event_name == 'repository_dispatch' && github.event.action == 'tests-passed'
-    # Condição: Executa apenas se o evento recebido for `tests-passed`.
+    if: github.event.action == 'tests-passed'  # Confirma que o evento é do tipo tests-passed.
 
     steps:
       - name: Checkout do código
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Garante que todas as branches sejam buscadas.
+          fetch-depth: 0  # Busca todas as branches para realizar o merge.
 
       - name: Configurar Git para o Merge
         run: |
