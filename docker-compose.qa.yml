@@ -1,9 +1,8 @@
-version: '3.8'
-
 services:
   app:
     build:
-      context: ./api  # Corrigido para usar ./api
+      context: ./api  # Atualizado para o diretório correto
+      dockerfile: Dockerfile
     container_name: demoblaze_site-app-qa
     ports:
       - "8000:8000"
@@ -11,7 +10,7 @@ services:
       - DATABASE_URL=postgresql://demoblaze_user:Q@cdias3242*&@db:5432/demoblaze
     depends_on:
       - db
-    command: uvicorn main:app --host 0.0.0.0 --port 8000  # Usando o mesmo comando do arquivo principal
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
 
   db:
     image: postgres:13
