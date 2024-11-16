@@ -3,10 +3,11 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
+      - qa
       - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,33 +22,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose
 
-      - name: Build do container
-        run: docker-compose up -d --build
-
-      - name: Configurar o Git para usar o GITHUB_TOKEN
+      - name: Build e Deploy
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Gerar nova versão e criar tag
-        id: tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git fetch --prune --unshallow
-          TAG="v1.0.$(date +'%Y%m%d%H%M%S')"
-          echo "Nova versão: $TAG"
-          git tag $TAG
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} $TAG
-          echo "::set-output name=TAG::$TAG"  # Define o nome da tag como uma saída para a próxima etapa
-
-      - name: Criar Release no GitHub
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ steps.tag.outputs.TAG }}  # Usa o tag_name criado na etapa anterior
-          release_name: "Release ${{ steps.tag.outputs.TAG }}"
-          draft: false
-          prerelease: false
-          body: "Nova release criada automaticamente pelo CI/CD pipeline."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if [ "${{ github.ref }}" == "refs/heads/qa" ]; then
+            echo "Deploy para QA na porta 8000"
+            docker-compose -f docker-compose.yml -f docker-compose.qa.yml down
+            docker-compose -f docker-compose.yml -f docker-compose.qa.yml up -d --build
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "Deploy para Produção na porta 8100"
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
+            docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+          fi
