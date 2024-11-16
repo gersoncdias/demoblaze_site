@@ -1,22 +1,9 @@
-Demoblaze Site - Projeto de API e Frontend
+# Demoblaze Site - Projeto de API e Frontend
 
-Este projeto contém uma aplicação web baseada em FastAPI com um frontend integrado. O objetivo do projeto é replicar algumas funcionalidades do site Demoblaze localmente.
-Sumário
+Este repositório contém uma aplicação web baseada em FastAPI com um frontend integrado. O objetivo do projeto é replicar localmente algumas funcionalidades do site Demoblaze, permitindo experimentos com uma arquitetura simples de API e frontend.
 
-    Estrutura do Projeto
-    Requisitos
-    Configuração do Ambiente
-    Inicialização do Projeto
-    Acesso ao Banco de Dados
-    Consultas e Operações no Banco de Dados
-    Rotas da API
-
-Estrutura do Projeto
-
-A estrutura do projeto é organizada da seguinte forma:
-
-arduino
-
+# Estrutura do Projeto
+```
 .
 ├── api
 │   ├── Dockerfile
@@ -31,147 +18,74 @@ arduino
         ├── bm.png
         ├── cart.html
         ├── config.json
-        ├── css
-        ├── imgs
-        ├── js
+        ├── css/
+        ├── imgs/
+        ├── js/
         ├── index.html
-        └── produtos
+        └── produtos/
+```
 
-    api/: Contém o backend implementado em FastAPI.
-    frontend/: Contém o frontend, arquivos estáticos, e a configuração do Nginx.
-    docker-compose.yml: Define os serviços para execução com Docker Compose.
-    requirements.txt: Lista de dependências Python para a API.
+## Componentes Principais
 
-Requisitos
+* `api/`: Contém o backend implementado em FastAPI.
+* `frontend/`: Contém o frontend estático e a configuração do servidor Nginx.
+* `docker-compose.yml`: Define os serviços necessários (API, frontend e banco de dados) para execução com Docker Compose.
+* `requirements.txt`: Lista de dependências Python necessárias para o backend.
 
-    Docker e Docker Compose instalados no sistema.
-    Python 3.9 (caso você queira executar a API fora do Docker).
-    PostgreSQL para banco de dados (embutido no Docker Compose).
+# Requisitos
 
-Configuração do Ambiente
+* Docker e Docker Compose instalados no sistema.
+* Python 3.9 (opcional, caso você deseje executar a API fora do Docker).
+* Banco de dados PostgreSQL (já configurado dentro do docker-compose.yml).
 
-Clone o repositório:
+# Configuração do Ambiente
 
-bash
+1. Clone o repositório:
 
-git clone https://seu-repositorio.git
+```
+git clone https://github.com/seu-usuario/demoblaze_site.git
 cd demoblaze_site
+```
 
-Inicialização do Projeto
-1. Subindo os Contêineres
+2. Certifique-se de que o Docker está instalado e funcionando:
 
-Para iniciar os serviços, utilize:
+```
+docker --version
+docker-compose --version
+```
 
-bash
+# Inicialização do Projeto
 
+1. Subir os Contêineres
+
+Execute o seguinte comando para construir e iniciar os serviços:
+
+```
 docker-compose up --build
+```
 
-Isso iniciará o banco de dados, a API e o frontend.
-2. Acesso à Aplicação
+Isso iniciará:
 
-    API: A API FastAPI estará disponível em http://127.0.0.1:8000.
-    Frontend: O frontend estará disponível em http://127.0.0.1:8080.
+* Banco de dados PostgreSQL
+* Backend FastAPI
+* Frontend Nginx
 
-Acesso ao Banco de Dados
-Acesso ao Container do Banco de Dados
+2. Acessar a Aplicação
 
-Para acessar o banco de dados via terminal:
+* API: Acesse a API FastAPI em: http://localhost:8000.
+* Frontend: O frontend estará disponível em: http://localhost:8000.
 
-bash
+# Acesso ao Banco de Dados
 
+Para acessar o banco de dados PostgreSQL via terminal:
+
+```
 docker exec -it demoblaze_site-db-1 psql -U demoblaze_user -d demoblaze
+```
+# Acesso as APIs
 
-Consultas e Operações no Banco de Dados
-Listar todas as tabelas:
+Para acessar o Swagger:
 
-sql
-
-\dt
-
-Descrição de uma tabela:
-
-sql
-
-\d users
-
-Inserir um novo usuário:
-
-sql
-
-INSERT INTO users (username, password) VALUES ('username', 'senha_codificada_em_base64');
-
-Selecionar todos os usuários:
-
-sql
-
-SELECT * FROM users;
-
-Deletar um usuário por ID:
-
-sql
-
-DELETE FROM users WHERE id = <id_do_usuario>;
-
-Criação da Tabela users
-
-Caso precise recriar a tabela users:
-
-sql
-
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
-);
-
-Rotas da API
-/signup - POST
-
-Cria um novo usuário. Exemplo de payload:
-
-json
-
-{
-  "username": "seu_username",
-  "password": "senha_codificada_em_base64"
-}
-
-/login - POST
-
-Realiza o login de um usuário. Exemplo de payload:
-
-json
-
-{
-  "username": "seu_username",
-  "password": "senha_codificada_em_base64"
-}
-
-Retorna um token de autenticação.
-/users - GET
-
-Retorna uma lista de todos os usuários cadastrados.
-/delete_user/{user_id} - DELETE
-
-Deleta um usuário específico pelo id.
-/prod.html - GET
-
-Retorna a página de produto estática correspondente ao idp_ fornecido.
-Principais Comandos
-Construir e Iniciar os Contêineres:
-
-bash
-
-docker-compose up --build
-
-Acessar o Banco de Dados:
-
-bash
-
-docker exec -it demoblaze_site-db-1 psql -U demoblaze_user -d demoblaze
-
-Parar os Contêineres:
-
-bash
-
-docker-compose down
+```
+http://localhost:8000/docs#/default/ask_question_api_ask_question__post
+```
