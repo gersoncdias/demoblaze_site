@@ -13,9 +13,14 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
+          fetch-depth: 0 
 
-      - name: Configurar Git para o Merge
+      - name: Buscar todas as branches remotas
+        run: |
+          git fetch origin  # Busca as branches remotas
+          git branch -r     # Lista as branches remotas para depuração
+
+      - name: Configurar Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -24,6 +29,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git checkout main
-          git merge qa --no-ff -m "Merge automático de QA para Main"
-          git push origin main
+          git checkout main  # Garante que estamos na branch main
+          git merge origin/qa --no-ff -m "Merge automático de QA para Main"  # Faz o merge
+          git push origin main  # Faz push para o repositório remoto
