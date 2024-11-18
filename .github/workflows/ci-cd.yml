@@ -24,20 +24,21 @@ jobs:
 
       - name: Build e Deploy
         run: |
-          if [ "${{github.ref}}" == "refs/heads/qa" ]; then
+          if [ "${{ github.ref }}" == "refs/heads/qa" ]; then
             echo "Deploy para QA na porta 8000"
             docker-compose down
             docker-compose up -d --build
-          elif [ "${{github.ref}}" == "refs/heads/main" ]; then
+          elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
             echo "Deploy para Produção na porta 8000"
             docker-compose down
             docker-compose up -d --build
           fi
 
       - name: Disparar Pipeline de Automação
+        if: github.ref == 'refs/heads/qa'
         run: |
           echo "Disparando pipeline de automação no repositório demoblaze_hm"
-          curl -X POST -H "Authorization: token ${{secrets.PERSONAL_ACCESS_TOKEN}}" \
+          curl -X POST -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
           -H "Accept: application/vnd.github.everest-preview+json" \
           https://api.github.com/repos/gersoncdias/demoblaze_hm/dispatches \
           -d '{"event_type": "run-tests"}'
