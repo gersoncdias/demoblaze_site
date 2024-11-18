@@ -1,0 +1,29 @@
+name: Merge Automático
+
+on:
+  repository_dispatch:
+    types:
+      - merge-triggered
+
+jobs:
+  merge-to-main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Git para o Merge
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Merge para Produção
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git checkout main
+          git merge qa --no-ff -m "Merge automático de QA para Main"
+          git push origin main

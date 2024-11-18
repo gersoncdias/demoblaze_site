@@ -34,33 +34,11 @@ jobs:
             docker-compose up -d --build
           fi
 
-      - name: Configurar o Git para usar o GITHUB_TOKEN
-        if: github.ref == 'refs/heads/main'
+      - name: Disparar Pipeline de Automação
+        if: github.ref == 'refs/heads/qa'
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Gerar nova versão e criar tag
-        if: github.ref == 'refs/heads/main'
-        id: tag
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git fetch --prune --unshallow
-          TAG="v1.0.$(date +'%Y%m%d%H%M%S')"
-          echo "Nova versão: $TAG"
-          git tag $TAG
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} $TAG
-          echo "::set-output name=TAG::$TAG"
-
-      - name: Criar Release no GitHub
-        if: github.ref == 'refs/heads/main'
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ steps.tag.outputs.TAG }}
-          release_name: "Release ${{ steps.tag.outputs.TAG }}"
-          draft: false
-          prerelease: false
-          body: "Nova release criada automaticamente pelo CI/CD pipeline."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "Disparando pipeline de automação no repositório demoblaze_hm"
+          curl -X POST -H "Authorization: token ${{ secrets.PERSONAL_ACCESS_TOKEN }}" \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          https://api.github.com/repos/gersoncdias/demoblaze_hm/dispatches \
+          -d '{"event_type": "run-tests"}'
