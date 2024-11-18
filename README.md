@@ -89,3 +89,5 @@ Para acessar o Swagger:
 ```
 http://localhost:8000/docs#/default/ask_question_api_ask_question__post
 ```
+
+teste de pipeline
