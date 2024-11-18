@@ -22,7 +22,7 @@ jobs:
 
       - name: Merge para Produção
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         run: |
           git checkout main
           git merge qa --no-ff -m "Merge automático de QA para Main"
